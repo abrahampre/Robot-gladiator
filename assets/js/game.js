@@ -75,6 +75,15 @@ var startGame = function(){
             enemyHealth = 50;
             // debugger
             fight(pickedEnemyNames);
+
+            // STORE
+            if(playerHealth> 0 && i<enemyNames.length - 1){
+                var storeConfirm = window.confirm("Fight is over, visit the store before the next round?");
+
+                if(storeConfirm){
+                    shop();
+                }
+            }
         }else{
             window.alert("You have lost your robot in Battle! GAME OVER")
             break;
@@ -104,6 +113,43 @@ var endGame = function(){
     }
 }
 
-// start the game when the page loads 
+var shop = function (){
+    var shopOptionPrompt = window.prompt(" Would you like to REFILL your healt, UPGRADE your attack or LEAVE store?: Please enter one: 'REFILL' ,'UPGRADE' OR 'LEAVE' to make a choice.")
+    // use swithc to carry out action 
+    switch(shopOptionPrompt){
+        case "REFILL":
+        case "refill":
+            if (playerMoney>= 7){
+                window.alert("Refilling player's healt by 20 for 7 dollars.");
+                // increase health and decrease money
+                playerHealth = playerHealth + 20;
+                playerMoney = playerMoney - 7;
+            } else{
+                window.alert("You dont have enough money!");
+            }
+            break;
+        case "UPGRADE":
+        case "upgrade":
+            if(playerMoney>=7){
+                window.alert("Upgrading player's attack by 6 for 7 dollars.");
+                // increase attack and decrease money 
+                playerAttack = playerAttack + 6 ;
+                playerMoney = playerMoney - 7;
+            }else{
+                window.alert("You dont have enough money")
+            }
+            break;
+        case "LEAVE":
+        case "leave":
+            window.alert("Leaving the store.");
+            break;
+        default:
+            window.alert("Please try a valid option");
+            // call shop() to  force player to pick valid option 
+            shop();
+            break;
+    }
+}
 
+// start the game when the page loads 
 startGame();

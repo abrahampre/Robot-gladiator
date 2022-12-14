@@ -1,26 +1,32 @@
 window.alert("Welcome to Robot Gladiators!")
 
-var skipOrFight = function (){
+
+var fightOrSkip = function (){
     //ask player if they will like to skip using fightOrSkip function
 
     var promptFight = window.prompt('Would you like to Fight or Skip this battle? Enter "FIGHT" or "SKIP" to choose.');
 
+    promptFight = promptFight.toLowerCase();
+
     if (promptFight === ""||promptFight === null){
         window.alert("Please provide a valid answer! Try Again!")
-        skipOrFight();
+        // debugger;
+        return fightOrSkip();
+
     }
 
     if(promptFight ==="skip"|| promptFight === "SKIP"){
         //confirm player wants to skip
-        var confirmSkip = window.confirm("Are you sure you want to Skip?")
+        var confirmSkip = window.confirm("Are you sure you want to quit?")
 
         if(confirmSkip){
             window.alert("Player has decided to skip the fight")
             // substract money from Playermoney for skipping
             playerInfo.money = playerInfo.money-10;
-            shop();
+            return true;
         }
     }
+    return false;
 }
 
 
@@ -28,8 +34,12 @@ var skipOrFight = function (){
 var fight = function(enemy){
     
     while(enemy.health>0 && playerInfo.health>0 ){
+        // debugger;
         // Ask player if theyd like to fight or run
-        skipOrFight();
+        if(fightOrSkip()){
+            // if true leave by breaking the loop
+            break;
+        }
         
         // generate a random damage value based on players attack power
         var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
@@ -58,7 +68,9 @@ var fight = function(enemy){
         else{
         window.alert(playerInfo.name+ " still has "+playerInfo.health+ " health left." );
         }
+        
     }
+    debugger;
 };
 
 // function to create random number 
@@ -132,7 +144,7 @@ var startGame = function(){
     for(var i=0; i < enemyInfo.length ; i++){
         if (playerInfo.health> 0){
             window.alert("Welcome to Robot Gladiators! Round " + (i+1))
-            debugger;
+            
             var pickedEnemyObj = enemyInfo[i];
             pickedEnemyObj.health = randomNumber(40,60);
             

@@ -32,43 +32,62 @@ var fightOrSkip = function (){
 
 // fight function with parameter for enemys name
 var fight = function(enemy){
+
+    var isPlayerTurn = true;
+
+    if(Math.random() > 0.5){
+        isPlayerTurn = false;
+    }
     
     while(enemy.health>0 && playerInfo.health>0 ){
-        // debugger;
-        // Ask player if theyd like to fight or run
-        if(fightOrSkip()){
-            // if true leave by breaking the loop
-            break;
-        }
-        
-        // generate a random damage value based on players attack power
-        var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
+       
+        if(isPlayerTurn){
+            // ask the player if they will like to fight or skip 
+                if(fightOrSkip()){
+                    // if true leave by breaking the loop
+                    break;
+                }
 
-        enemy.health= Math.max(0,enemy.health-damage);
+            // generate a random damage value based on players attack power
+            var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
 
-        // Log resulting message to the console so we know that it worked 
-        console.log(playerInfo.name+ " attacked " +enemy.name + ". " +enemy.name+ " now has "+ enemy.health+ " health remaining.")
-        if(enemy.health<=0){
-            window.alert(enemy.name +" has died!");
-            break;
+            // remove enemys health by substracting the amount we set in the damage variable 
+            enemy.health= Math.max(0,enemy.health-damage);
+
+            // Log resulting message to the console so we know that it worked 
+            console.log(playerInfo.name+ " attacked " +enemy.name + ". " +enemy.name+ " now has "+ enemy.health+ " health remaining.")
+           
+            //    check enemys health 
+            if(enemy.health<=0){
+                window.alert(enemy.name +" has died!");
+                // award player for winning 
+                playerInfo.money = playerInfo.money + 20;
+                // leave while loop
+                break;
+            }else{
+                window.alert(enemy.name+ " still has "+ enemy.health+ " health left.")
+            }
+
+        // player gets attacked first 
+        }else{
+
+            var damage = randomNumber(enemy.attack - 3 ,enemy.attack)
+
+            // remove players health by substracting the amount we set in teh damage variable 
+            playerInfo.health = Math.max(0, playerInfo.health - damage)
+            // Log a result message to the console so we know that it worked 
+            console.log(enemy.name +" attacked "+playerInfo.name+ ". " +playerInfo.name+ " now has "+ playerInfo.health+ " health remaining")
+
+            // check players health
+            if(playerInfo.health<=0){
+                window.alert(playerInfo.name +" has died!");
+                // leave while loop if player is dead 
+                break;
+            }else{
+            window.alert(playerInfo.name+ " still has "+playerInfo.health+ " health left." );
+            }
         }
-        else{
-        window.alert(enemy.name+ " still has "+ enemy.health+ " health left.")
-        }
-        //remove players health
-        var damage = randomNumber(enemy.attack - 3 ,enemy.attack)
-        playerInfo.health = Math.max(0, playerInfo.health - damage)
-        // Log a result message to the console so we know that it worked 
-        console.log(enemy.name +" attacked "+playerInfo.name+ ". " +playerInfo.name+ " now has "+ playerInfo.health+ " health remaining")
-        // check players health
-        if(playerInfo.health<=0){
-            window.alert(playerInfo.name +" has died!");
-            break;
-        }
-        else{
-        window.alert(playerInfo.name+ " still has "+playerInfo.health+ " health left." );
-        }
-        
+    isPlayerTurn = !isPlayerTurn;
     }
     debugger;
 };
@@ -169,6 +188,25 @@ var startGame = function(){
 
 
 var endGame = function(){
+
+    window.alert("The game has ended, lets see how you did!")
+
+    // check localStorage highscore if not set it to  0
+    
+    highScore = localStorage.getItem("highscore");
+    if(highScore ===null){
+        highScore = 0;
+    }
+
+    if(highScore> playerInfo.money){
+        window.alert("You did not beat the highest score of " +highScore )
+    }else{
+        localStorage.clear();
+        localStorage.setItem("Robot",playerInfo.name)
+        localStorage.setItem("highscore", playerInfo.money)
+        window.alert("You beat the high score!")
+    }
+
     // if player is still alive, player wins!
     if(playerInfo.health > 0){
         window.alert("Great job, you've survived the game! You have a score of " + playerInfo.money+ ".")
